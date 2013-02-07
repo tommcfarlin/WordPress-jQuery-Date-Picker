@@ -43,12 +43,18 @@ class WordPress_jQuery_Date_Picker {
 		// Load plugin text domain
 		add_action( 'init', array( $this, 'plugin_textdomain' ) );
 		
-		// Register Stylesheets
+		// Register admin Stylesheets
 		add_action( 'admin_print_styles', array( $this, 'register_admin_styles' ) );
+		
+		// Register admin JavaScript
+		add_action( 'admin_enqueue_scripts', array( $this, 'register_admin_scripts' ) );
 		
 		// Register the date meta box
 		add_action( 'add_meta_boxes', array( $this, 'add_date_meta_box' ) );
 		add_action( 'save_post', array( $this, 'save_the_date' ) );
+		
+		// Display the date in the post
+		add_action( 'the_content', array( $this, 'prepend_the_date' ) );
 		 
 	 } // end __construct
 
@@ -73,9 +79,24 @@ class WordPress_jQuery_Date_Picker {
      * @since 		1.0
 	 */
 	public function register_admin_styles() {
+	
+		wp_enqueue_style( 'jquery-ui-datepicker', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/themes/smoothness/jquery-ui.css' );
 		wp_enqueue_style( 'wp-jquery-date-picker', plugins_url( 'WordPress-jQuery-Date-Picker/css/admin.css' ) );	
+		
 	} // end register_admin_styles
 
+	/**
+	 * Registers and enqueues admin-specific JavaScript.
+	 *
+	 * @version		1.0
+	 * @since 		1.0
+	 */	
+	public function register_admin_scripts() {
+	
+		wp_enqueue_script( 'jquery-ui-datepicker' );
+		wp_enqueue_script( 'wp-jquery-date-picker', plugins_url( 'WordPress-jQuery-Date-Picker/js/admin.js' ) );
+		
+	} // end register_admin_scripts
 	
 	/*---------------------------------------------*
 	 * Core Functions
@@ -135,6 +156,24 @@ class WordPress_jQuery_Date_Picker {
 		 } // end if
 		 
 	 } // end save_the_date 
+	 
+	 /**
+	  * Saves the project completion data for the incoming post ID.
+	  *
+	  * @param		int		The current Post ID.
+	  * @version	1.0
+	  * @since 		1.0
+	  */ 
+	  public function prepend_the_date( $content ) {
+	
+		// If the post meta isn't empty for `the_date`, then render it in the content
+		if( 0 != ( $the_date = get_post_meta( get_the_ID(), 'the_date', true ) ) ) {
+			$content = '<p>' . $the_date . '</p>' . $content;
+		} // end if
+		
+		return $content;
+	 
+	} // end prepend_the_date
 	 
  	/*---------------------------------------------*
 	 * Helper Functions
