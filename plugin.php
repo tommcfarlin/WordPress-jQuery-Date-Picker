@@ -3,7 +3,7 @@
 Plugin Name: WordPress jQuery Date Picker
 Plugin URI: https://github.com/tommcfarlin/WordPress-jQuery-Date-Picker/
 Description: A sample plugin used to demonstrate how to include the jQuery Date Picker into the post editor.
-Version: 0.5
+Version: 1.0
 Author: Tom McFarlin
 Author URI: http://tommcfarlin.com/
 Author Email: tom@tommcfarlin.com
